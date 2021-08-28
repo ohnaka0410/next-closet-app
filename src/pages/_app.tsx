@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import "~/styles/globals.css";
+import "destyle.css";
 
 const App: React.VFC<AppProps> = ({ Component, pageProps }) => {
   return <Component {...pageProps} />;
