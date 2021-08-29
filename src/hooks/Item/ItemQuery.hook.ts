@@ -5,14 +5,15 @@ import type { Item, ItemSummary } from "~/@types";
 const key = "item";
 
 type ItemListByGenreKeyQueryParams = {
-  genreKey: string;
+  genreKey: string | undefined;
+  limit?: number;
 };
 
 type ItemListByGenreKeyQueryResult = Item[] | undefined;
 
 export const useItemListByGenreKeyQuery = (
   { genreKey }: ItemListByGenreKeyQueryParams,
-  options: QueryOptions<ItemListByGenreKeyQueryResult, Error>
+  options?: QueryOptions<ItemListByGenreKeyQueryResult, Error>
 ) => {
   return useQuery<ItemListByGenreKeyQueryResult, Error>(
     [key, { genreKey }],
@@ -25,14 +26,14 @@ export const useItemListByGenreKeyQuery = (
 };
 
 type ItemListByCategoryKeyQueryParams = {
-  categoryKey: string;
+  categoryKey: string | undefined;
 };
 
 type ItemListByCategoryKeyQueryResult = Item[] | undefined;
 
 export const useItemListByCategoryKeyQuery = (
   { categoryKey }: ItemListByCategoryKeyQueryParams,
-  options: QueryOptions<ItemListByCategoryKeyQueryResult, Error>
+  options?: QueryOptions<ItemListByCategoryKeyQueryResult, Error>
 ) => {
   return useQuery<ItemListByCategoryKeyQueryResult, Error>(
     [key, { categoryKey }],
@@ -47,7 +48,7 @@ export const useItemListByCategoryKeyQuery = (
 type BestUseTotalCountItemListQueryResult = Item[];
 
 export const useBestUseTotalCountItemListQuery = (
-  options: QueryOptions<BestUseTotalCountItemListQueryResult, Error>
+  options?: QueryOptions<BestUseTotalCountItemListQueryResult, Error>
 ) => {
   return useQuery<BestUseTotalCountItemListQueryResult, Error>(
     [key, "bestUseTotalCount"],
@@ -62,7 +63,7 @@ export const useBestUseTotalCountItemListQuery = (
 type WorstUseTotalCountItemListQueryResult = Item[];
 
 export const useWorstUseTotalCountItemListQuery = (
-  options: QueryOptions<WorstUseTotalCountItemListQueryResult, Error>
+  options?: QueryOptions<WorstUseTotalCountItemListQueryResult, Error>
 ) => {
   return useQuery<WorstUseTotalCountItemListQueryResult, Error>(
     [key, "bestUseTotalCount"],
@@ -75,14 +76,14 @@ export const useWorstUseTotalCountItemListQuery = (
 };
 
 type ItemListByDateQueryParams = {
-  date: string;
+  date: string | undefined;
 };
 
 type ItemListByDateQueryResult = Item[] | undefined;
 
 export const useItemListByDateQuery = (
   { date }: ItemListByDateQueryParams,
-  options: QueryOptions<ItemListByDateQueryResult, Error>
+  options?: QueryOptions<ItemListByDateQueryResult, Error>
 ) => {
   return useQuery<ItemListByDateQueryResult, Error>(
     [key, { date }],
@@ -95,12 +96,12 @@ export const useItemListByDateQuery = (
 };
 
 type ItemQueryParams = {
-  itemKey: string;
+  itemKey: string | undefined;
 };
 
 type ItemQueryResult = Item | undefined;
 
-export const useItemQuery = ({ itemKey }: ItemQueryParams, options: QueryOptions<ItemQueryResult, Error>) => {
+export const useItemQuery = ({ itemKey }: ItemQueryParams, options?: QueryOptions<ItemQueryResult, Error>) => {
   return useQuery<ItemQueryResult, Error>(
     [key, { itemKey }],
     async (): Promise<ItemQueryResult> => {
@@ -121,7 +122,7 @@ type CreateItemMutationParams = Pick<
 type CreateItemMutationResult = void;
 
 export const useCreateItemMutation = (
-  options: MutateOptions<CreateItemMutationResult, Error, CreateItemMutationParams>
+  options?: MutateOptions<CreateItemMutationResult, Error, CreateItemMutationParams>
 ) => {
   return useMutation<CreateItemMutationResult, Error, CreateItemMutationParams>(
     async ({ imageFile, ...item }: CreateItemMutationParams): Promise<CreateItemMutationResult> => {
@@ -143,7 +144,7 @@ type UpdateItemMutationParams = Pick<
 type UpdateItemMutationResult = void;
 
 export const useUpdateItemMutation = (
-  options: MutateOptions<UpdateItemMutationResult, Error, UpdateItemMutationParams>
+  options?: MutateOptions<UpdateItemMutationResult, Error, UpdateItemMutationParams>
 ) => {
   return useMutation<UpdateItemMutationResult, Error, UpdateItemMutationParams>(
     async ({ imageFile, ...item }: UpdateItemMutationParams): Promise<UpdateItemMutationResult> => {
@@ -162,7 +163,7 @@ type DeleteItemMutationParams = {
 type DeleteItemMutationResult = void;
 
 export const useDeleteItemMutation = (
-  options: MutateOptions<DeleteItemMutationResult, Error, DeleteItemMutationParams>
+  options?: MutateOptions<DeleteItemMutationResult, Error, DeleteItemMutationParams>
 ) => {
   return useMutation<DeleteItemMutationResult, Error, DeleteItemMutationParams>(
     async ({ itemKey }: DeleteItemMutationParams): Promise<DeleteItemMutationResult> => {
@@ -180,11 +181,11 @@ type UseItemMutationParams = {
 
 type UseItemMutationResult = void;
 
-export const useUseItemMutation = (options: MutateOptions<UseItemMutationResult, Error, UseItemMutationParams>) => {
+export const useUseItemMutation = (options?: MutateOptions<UseItemMutationResult, Error, UseItemMutationParams>) => {
   return useMutation<UseItemMutationResult, Error, UseItemMutationParams>(
     async ({ itemKey, date }: UseItemMutationParams): Promise<UseItemMutationResult> => {
       // TODO
-      console.log(itemKey);
+      console.log({ itemKey, date });
     },
     options
   );
@@ -192,7 +193,7 @@ export const useUseItemMutation = (options: MutateOptions<UseItemMutationResult,
 
 type ItemSummaryQueryResult = ItemSummary[] | undefined;
 
-export const useItemSummaryQuery = (options: QueryOptions<ItemSummaryQueryResult, Error>) => {
+export const useItemSummaryQuery = (options?: QueryOptions<ItemSummaryQueryResult, Error>) => {
   return useQuery<ItemSummaryQueryResult, Error>(
     [key, "summary"],
     async (): Promise<ItemSummaryQueryResult> => {

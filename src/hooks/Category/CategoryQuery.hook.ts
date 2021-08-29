@@ -5,14 +5,14 @@ import type { Category } from "~/@types";
 const key = "category";
 
 type CategoryListByGenreKeyQueryParams = {
-  genreKey: string;
+  genreKey: string | undefined;
 };
 
 type CategoryListByGenreKeyQueryResult = Category[] | undefined;
 
 export const useCategoryListByGenreQuery = (
   { genreKey }: CategoryListByGenreKeyQueryParams,
-  options: QueryOptions<CategoryListByGenreKeyQueryResult, Error>
+  options?: QueryOptions<CategoryListByGenreKeyQueryResult, Error>
 ) => {
   return useQuery<CategoryListByGenreKeyQueryResult, Error>(
     [key, { genreKey }],
@@ -25,14 +25,14 @@ export const useCategoryListByGenreQuery = (
 };
 
 type CategoryQueryParams = {
-  categoryKey: string;
+  categoryKey: string | undefined;
 };
 
 type CategoryQueryResult = Category | undefined;
 
 export const useCategoryQuery = (
   { categoryKey }: CategoryQueryParams,
-  options: QueryOptions<CategoryQueryResult, Error>
+  options?: QueryOptions<CategoryQueryResult, Error>
 ) => {
   return useQuery<CategoryQueryResult, Error>(
     [key, { categoryKey }],
