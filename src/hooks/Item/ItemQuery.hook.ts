@@ -74,6 +74,26 @@ export const useWorstUseTotalCountItemListQuery = (
   );
 };
 
+type ItemListByDateQueryParams = {
+  date: string;
+};
+
+type ItemListByDateQueryResult = Item[] | undefined;
+
+export const useItemListByDateQuery = (
+  { date }: ItemListByDateQueryParams,
+  options: QueryOptions<ItemListByDateQueryResult, Error>
+) => {
+  return useQuery<ItemListByDateQueryResult, Error>(
+    [key, { date }],
+    async (): Promise<ItemListByDateQueryResult> => {
+      // TODO
+      return undefined;
+    },
+    options
+  );
+};
+
 type ItemQueryParams = {
   itemKey: string;
 };
@@ -146,6 +166,23 @@ export const useDeleteItemMutation = (
 ) => {
   return useMutation<DeleteItemMutationResult, Error, DeleteItemMutationParams>(
     async ({ itemKey }: DeleteItemMutationParams): Promise<DeleteItemMutationResult> => {
+      // TODO
+      console.log(itemKey);
+    },
+    options
+  );
+};
+
+type UseItemMutationParams = {
+  itemKey: string;
+  date: string;
+};
+
+type UseItemMutationResult = void;
+
+export const useUseItemMutation = (options: MutateOptions<UseItemMutationResult, Error, UseItemMutationParams>) => {
+  return useMutation<UseItemMutationResult, Error, UseItemMutationParams>(
+    async ({ itemKey, date }: UseItemMutationParams): Promise<UseItemMutationResult> => {
       // TODO
       console.log(itemKey);
     },
