@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "run-p dev:*",
-    "dev:next": "next dev",
-    "dev:pathpida": "pathpida --watch",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pathpida": "pathpida --output=\"src/libraries\""
   },
   "dependencies": {
     "destyle.css": "^2.0.2",
