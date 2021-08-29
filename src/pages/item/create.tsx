@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
-import { Home } from "~/components/pages/Home";
+import { ItemCreate } from "~/components/pages/ItemCreate";
 
 const Page: NextPage = (): JSX.Element => {
-  return <Home />;
+  return <ItemCreate />;
 };
 
 export default Page;
