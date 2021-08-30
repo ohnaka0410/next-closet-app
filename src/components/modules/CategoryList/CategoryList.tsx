@@ -4,10 +4,10 @@ import { CategoryListItem } from "./CategoryListItem";
 
 type Props = {
   genreKey: string | undefined;
-  onSelect?: (item: Item) => void;
+  onSelect?: (item: Item) => void | Promise<void>;
 };
 
-export const GenreList: React.VFC<Props> = ({ genreKey, onSelect }): JSX.Element => {
+export const CategoryList: React.VFC<Props> = ({ genreKey, onSelect }): JSX.Element => {
   const { data: categoryList } = useCategoryListByGenreQuery({ genreKey });
   return (
     <ul>

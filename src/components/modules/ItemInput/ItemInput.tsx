@@ -12,7 +12,28 @@ export type ItemInputValue = Pick<Item, "brand" | "size" | "purchaseDate"> & {
   imageFile?: File;
 };
 
+export const defaultInputValue: ItemInputValue = {
+  genreKey: undefined,
+  categoryKey: undefined,
+  brand: "",
+  size: "",
+  purchaseDate: "",
+  price: "",
+  initialUseCount: "",
+  imageFile: undefined,
+};
+
 export type ItemIsEditValue = Record<keyof Omit<ItemInputValue, "imageFile">, boolean>;
+
+export const defaultIsEditValue: ItemIsEditValue = {
+  genreKey: false,
+  categoryKey: false,
+  brand: false,
+  size: false,
+  purchaseDate: false,
+  price: false,
+  initialUseCount: false,
+};
 
 type Props = {
   inputValue: ItemInputValue;

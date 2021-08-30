@@ -4,7 +4,7 @@ import { useItemListByCategoryKeyQuery } from "~/hooks/Item";
 
 type Props = {
   category: Category;
-  onSelect?: (item: Item) => void;
+  onSelect?: (item: Item) => void | Promise<void>;
 };
 
 export const CategoryListItem: React.VFC<Props> = ({ category, onSelect }): JSX.Element => {

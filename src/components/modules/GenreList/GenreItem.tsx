@@ -3,7 +3,7 @@ import { useGenreListQuery } from "~/hooks/Genre";
 import { GenreListItem } from "./GenreListItem";
 
 type Props = {
-  onSelect?: (genrey: Genre) => void;
+  onSelect?: (genre: Genre) => void;
 };
 
 export const GenreList: React.VFC<Props> = ({ onSelect }): JSX.Element => {

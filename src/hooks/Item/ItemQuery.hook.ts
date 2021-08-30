@@ -174,31 +174,17 @@ export const useDeleteItemMutation = (
   );
 };
 
-type UseItemMutationParams = {
-  itemKey: string;
-  date: string;
-};
-
-type UseItemMutationResult = void;
-
-export const useUseItemMutation = (options?: MutateOptions<UseItemMutationResult, Error, UseItemMutationParams>) => {
-  return useMutation<UseItemMutationResult, Error, UseItemMutationParams>(
-    async ({ itemKey, date }: UseItemMutationParams): Promise<UseItemMutationResult> => {
-      // TODO
-      console.log({ itemKey, date });
-    },
-    options
-  );
-};
-
-type ItemSummaryQueryResult = ItemSummary[] | undefined;
+type ItemSummaryQueryResult = ItemSummary;
 
 export const useItemSummaryQuery = (options?: QueryOptions<ItemSummaryQueryResult, Error>) => {
   return useQuery<ItemSummaryQueryResult, Error>(
     [key, "summary"],
     async (): Promise<ItemSummaryQueryResult> => {
       // TODO
-      return undefined;
+      return {
+        price: 0,
+        totalUseCount: 1,
+      };
     },
     options
   );

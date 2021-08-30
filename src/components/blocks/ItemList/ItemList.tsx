@@ -3,7 +3,7 @@ import { ItemListItem } from "./ItemListItem";
 
 type Props = {
   itemList: Item[] | undefined;
-  onSelect?: (item: Item) => void;
+  onSelect?: (item: Item) => void | Promise<void>;
 };
 
 export const ItemList: React.VFC<Props> = ({ itemList, onSelect }): JSX.Element => {

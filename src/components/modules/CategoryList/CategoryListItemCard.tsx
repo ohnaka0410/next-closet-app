@@ -3,7 +3,7 @@ import { Item } from "~/@types";
 
 type Props = {
   item: Item;
-  onSelect?: (item: Item) => void;
+  onSelect?: (item: Item) => void | Promise<void>;
 };
 
 export const CategoryListItemCard: React.VFC<Props> = ({ item, onSelect }): JSX.Element => {
