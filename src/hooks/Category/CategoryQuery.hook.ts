@@ -1,6 +1,7 @@
 import type { QueryOptions } from "react-query";
 import { useQuery } from "react-query";
 import type { Category } from "~/@types";
+import { supabase } from "~/libraries";
 
 const key = "category";
 
@@ -17,8 +18,14 @@ export const useCategoryListByGenreQuery = (
   return useQuery<CategoryListByGenreKeyQueryResult, Error>(
     [key, { genreKey }],
     async (): Promise<CategoryListByGenreKeyQueryResult> => {
-      // TODO
-      return [];
+      if (genreKey == null) {
+        return [];
+      }
+      const { data, error } = await supabase.from<Category>("categoryView").select("*").eq("genreKey", genreKey);
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );
@@ -37,8 +44,14 @@ export const useCategoryQuery = (
   return useQuery<CategoryQueryResult, Error>(
     [key, { categoryKey }],
     async (): Promise<CategoryQueryResult> => {
-      // TODO
-      return undefined;
+      if (categoryKey == null) {
+        return undefined;
+      }
+      const { data, error } = await supabase.from<Category>("categoryView").select("*").eq("key", categoryKey);
+      if (error != null) {
+        throw error;
+      }
+      return (data ?? undefined)?.[0];
     },
     options
   );

@@ -9,7 +9,8 @@ export type Item = {
   initialUseCount: number;
   useCount: Readonly<number>;
   totalUseCount: Readonly<number>;
-  imageUrl: string;
+  imageKey: string;
+  createdAt: Readonly<string>;
 };
 
 export type ItemSummary = {

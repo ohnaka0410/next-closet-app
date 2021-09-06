@@ -1,6 +1,7 @@
 import type { QueryOptions, MutateOptions } from "react-query";
 import { useQuery, useMutation } from "react-query";
-import type { Item, ItemSummary } from "~/@types";
+import type { Item, ItemSummary, Calendar } from "~/@types";
+import { supabase } from "~/libraries";
 
 const key = "item";
 
@@ -18,8 +19,11 @@ export const useItemListByGenreKeyQuery = (
   return useQuery<ItemListByGenreKeyQueryResult, Error>(
     [key, { genreKey }],
     async (): Promise<ItemListByGenreKeyQueryResult> => {
-      // TODO
-      return [];
+      const { data, error } = await supabase.from<Item>("itemView").select("*").eq("genreKey", genreKey);
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );
@@ -38,14 +42,17 @@ export const useItemListByCategoryKeyQuery = (
   return useQuery<ItemListByCategoryKeyQueryResult, Error>(
     [key, { categoryKey }],
     async (): Promise<ItemListByCategoryKeyQueryResult> => {
-      // TODO
-      return [];
+      const { data, error } = await supabase.from<Item>("itemView").select("*").eq("categoryKey", categoryKey);
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );
 };
 
-type BestUseTotalCountItemListQueryResult = Item[];
+type BestUseTotalCountItemListQueryResult = Item[] | undefined;
 
 export const useBestUseTotalCountItemListQuery = (
   options?: QueryOptions<BestUseTotalCountItemListQueryResult, Error>
@@ -53,14 +60,21 @@ export const useBestUseTotalCountItemListQuery = (
   return useQuery<BestUseTotalCountItemListQueryResult, Error>(
     [key, "bestUseTotalCount"],
     async (): Promise<BestUseTotalCountItemListQueryResult> => {
-      // TODO
-      return [];
+      const { data, error } = await supabase
+        .from<Item>("itemView")
+        .select("*")
+        .order("totalUseCount", { ascending: false })
+        .limit(6);
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );
 };
 
-type WorstUseTotalCountItemListQueryResult = Item[];
+type WorstUseTotalCountItemListQueryResult = Item[] | undefined;
 
 export const useWorstUseTotalCountItemListQuery = (
   options?: QueryOptions<WorstUseTotalCountItemListQueryResult, Error>
@@ -68,8 +82,15 @@ export const useWorstUseTotalCountItemListQuery = (
   return useQuery<WorstUseTotalCountItemListQueryResult, Error>(
     [key, "bestUseTotalCount"],
     async (): Promise<WorstUseTotalCountItemListQueryResult> => {
-      // TODO
-      return [];
+      const { data, error } = await supabase
+        .from<Item>("itemView")
+        .select("*")
+        .order("totalUseCount", { ascending: true })
+        .limit(6);
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );
@@ -81,6 +102,10 @@ type ItemListByDateQueryParams = {
 
 type ItemListByDateQueryResult = Item[] | undefined;
 
+type Test = Calendar & {
+  itemView: Item[];
+};
+
 export const useItemListByDateQuery = (
   { date }: ItemListByDateQueryParams,
   options?: QueryOptions<ItemListByDateQueryResult, Error>
@@ -88,8 +113,14 @@ export const useItemListByDateQuery = (
   return useQuery<ItemListByDateQueryResult, Error>(
     [key, { date }],
     async (): Promise<ItemListByDateQueryResult> => {
-      // TODO
-      return undefined;
+      if (date == null) {
+        return undefined;
+      }
+      const { data, error } = await supabase.from<Test>("calendar").select("*,itemView(*)").eq("date", date);
+      if (error != null) {
+        throw error;
+      }
+      return (data ?? undefined)?.[0]?.itemView;
     },
     options
   );
@@ -105,8 +136,14 @@ export const useItemQuery = ({ itemKey }: ItemQueryParams, options?: QueryOption
   return useQuery<ItemQueryResult, Error>(
     [key, { itemKey }],
     async (): Promise<ItemQueryResult> => {
-      // TODO
-      return undefined;
+      if (itemKey == null) {
+        return undefined;
+      }
+      const { data, error } = await supabase.from<Item>("itemView").select("*").eq("key", itemKey);
+      if (error != null) {
+        throw error;
+      }
+      return (data ?? undefined)?.[0];
     },
     options
   );
@@ -119,16 +156,24 @@ type CreateItemMutationParams = Pick<
   imageFile?: File;
 };
 
-type CreateItemMutationResult = void;
+type CreateItemMutationResult = Item;
 
 export const useCreateItemMutation = (
   options?: MutateOptions<CreateItemMutationResult, Error, CreateItemMutationParams>
 ) => {
   return useMutation<CreateItemMutationResult, Error, CreateItemMutationParams>(
     async ({ imageFile, ...item }: CreateItemMutationParams): Promise<CreateItemMutationResult> => {
-      // TODO
-      console.log(imageFile);
-      console.log(item);
+      const { data, error } = await supabase.from<Item>("item").insert({
+        ...item,
+      });
+      if (error != null) {
+        throw error;
+      }
+      const result = (data ?? undefined)?.[0];
+      if (result == null) {
+        throw new Error("insert failed");
+      }
+      return result;
     },
     options
   );
@@ -137,20 +182,29 @@ export const useCreateItemMutation = (
 type UpdateItemMutationParams = Pick<
   Item,
   "key" | "genreKey" | "categoryKey" | "brand" | "size" | "price" | "purchaseDate" | "initialUseCount"
-> & {
-  imageFile?: File;
-};
+>;
 
-type UpdateItemMutationResult = void;
+type UpdateItemMutationResult = Item;
 
 export const useUpdateItemMutation = (
   options?: MutateOptions<UpdateItemMutationResult, Error, UpdateItemMutationParams>
 ) => {
   return useMutation<UpdateItemMutationResult, Error, UpdateItemMutationParams>(
-    async ({ imageFile, ...item }: UpdateItemMutationParams): Promise<UpdateItemMutationResult> => {
-      // TODO
-      console.log(imageFile);
-      console.log(item);
+    async ({ key, ...item }: UpdateItemMutationParams): Promise<UpdateItemMutationResult> => {
+      const { data, error } = await supabase
+        .from<Item>("item")
+        .update({
+          ...item,
+        })
+        .eq("key", key);
+      if (error != null) {
+        throw error;
+      }
+      const result = (data ?? undefined)?.[0];
+      if (result == null) {
+        throw new Error("update failed");
+      }
+      return result;
     },
     options
   );
@@ -167,8 +221,10 @@ export const useDeleteItemMutation = (
 ) => {
   return useMutation<DeleteItemMutationResult, Error, DeleteItemMutationParams>(
     async ({ itemKey }: DeleteItemMutationParams): Promise<DeleteItemMutationResult> => {
-      // TODO
-      console.log(itemKey);
+      const { error } = await supabase.from<Item>("item").delete().eq("key", itemKey);
+      if (error != null) {
+        throw error;
+      }
     },
     options
   );

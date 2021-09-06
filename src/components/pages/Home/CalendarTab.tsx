@@ -11,7 +11,7 @@ export const CalendarTab: React.VFC<Props> = (): JSX.Element => {
       <ul>
         {calendarList != null &&
           calendarList.map<JSX.Element>((calendar: Calendar): JSX.Element => {
-            return <CalendarItem key={calendar.key} date={calendar.date} />;
+            return <CalendarItem key={`${calendar.date}/${calendar.itemKey}`} date={calendar.date} />;
           })}
       </ul>
     </div>

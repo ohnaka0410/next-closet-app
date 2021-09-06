@@ -1,5 +1,5 @@
 export type Calendar = {
-  key: string;
-  itemKey: string;
   date: string;
+  itemKey: string;
+  createdAt: Readonly<string>;
 };

@@ -1,6 +1,7 @@
-import type { QueryOptions, MutateOptions } from "react-query";
-import { useQuery, useMutation } from "react-query";
+import type { MutateOptions, QueryOptions } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import type { Calendar } from "~/@types";
+import { supabase } from "~/libraries";
 
 const key = "calendar";
 
@@ -10,8 +11,11 @@ export const useCalendarListQuery = (options?: QueryOptions<CalendarListQueryRes
   return useQuery<CalendarListQueryResult, Error>(
     [key],
     async (): Promise<CalendarListQueryResult> => {
-      // TODO
-      return [];
+      const { data, error } = await supabase.from<Calendar>("genre_view").select("*");
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );
@@ -19,15 +23,24 @@ export const useCalendarListQuery = (options?: QueryOptions<CalendarListQueryRes
 
 type AddCalendarMutationParams = Pick<Calendar, "date" | "itemKey">;
 
-type AddCalendarMutationResult = void;
+type AddCalendarMutationResult = Calendar;
 
 export const useAddCalendarMutation = (
   options?: MutateOptions<AddCalendarMutationResult, Error, AddCalendarMutationParams>
 ) => {
   return useMutation<AddCalendarMutationResult, Error, AddCalendarMutationParams>(
-    async ({ itemKey, date }: AddCalendarMutationParams): Promise<AddCalendarMutationResult> => {
-      // TODO
-      console.log({ itemKey, date });
+    async ({ ...calendar }: AddCalendarMutationParams): Promise<AddCalendarMutationResult> => {
+      const { data, error } = await supabase.from<Calendar>("calendar").insert({
+        ...calendar,
+      });
+      if (error != null) {
+        throw error;
+      }
+      const result = (data ?? undefined)?.[0];
+      if (result == null) {
+        throw new Error("insert failed");
+      }
+      return result;
     },
     options
   );
@@ -41,9 +54,11 @@ export const useDeleteCalendarMutation = (
   options?: MutateOptions<DeleteCalendarMutationResult, Error, DeleteCalendarMutationParams>
 ) => {
   return useMutation<DeleteCalendarMutationResult, Error, DeleteCalendarMutationParams>(
-    async ({ itemKey, date }: DeleteCalendarMutationParams): Promise<DeleteCalendarMutationResult> => {
-      // TODO
-      console.log({ itemKey, date });
+    async ({ date, itemKey }: DeleteCalendarMutationParams): Promise<DeleteCalendarMutationResult> => {
+      const { error } = await supabase.from<Calendar>("calendar").delete().eq("date", date).eq("itemKey", itemKey);
+      if (error != null) {
+        throw error;
+      }
     },
     options
   );

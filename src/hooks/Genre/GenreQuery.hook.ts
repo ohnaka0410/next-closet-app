@@ -1,6 +1,7 @@
 import type { QueryOptions } from "react-query";
 import { useQuery } from "react-query";
 import type { Genre } from "~/@types";
+import { supabase } from "~/libraries";
 
 const key = "genre";
 
@@ -10,8 +11,11 @@ export const useGenreListQuery = (options?: QueryOptions<GenreListQueryResult, E
   return useQuery<GenreListQueryResult, Error>(
     [key],
     async (): Promise<GenreListQueryResult> => {
-      // TODO
-      return [];
+      const { data, error } = await supabase.from<Genre>("genreView").select("*");
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );
@@ -27,8 +31,14 @@ export const useGenreQuery = ({ genreKey }: GenreQueryParams, options?: QueryOpt
   return useQuery<GenreQueryResult, Error>(
     [key, { genreKey }],
     async (): Promise<GenreQueryResult> => {
-      // TODO
-      return undefined;
+      if (genreKey == null) {
+        return undefined;
+      }
+      const { data, error } = await supabase.from<Genre>("genreView").select("*").eq("key", genreKey);
+      if (error != null) {
+        throw error;
+      }
+      return (data ?? undefined)?.[0];
     },
     options
   );
