@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
+import { useAuthSignOutMutation } from "~/hooks/Auth";
 import { pagesPath } from "~/libraries";
 import { CalendarTab } from "./CalendarTab";
 import { HomeTab } from "./HomeTab";
@@ -16,6 +17,7 @@ type Tab = typeof Tab[keyof typeof Tab];
 export const Home: React.VFC<Props> = (): JSX.Element => {
   const { push } = useRouter();
   const [tab, setTab] = useState<Tab>(Tab.HOME);
+  const { mutateAsync: signOut } = useAuthSignOutMutation();
 
   const handleClickHomeButton = useCallback((): void => {
     setTab(Tab.HOME);
@@ -29,6 +31,10 @@ export const Home: React.VFC<Props> = (): JSX.Element => {
     push(pagesPath.item.create.$url());
   }, [push]);
 
+  const handleClickSignOutButton = useCallback(async (): Promise<void> => {
+    await signOut();
+  }, [signOut]);
+
   return (
     <div>
       {tab === Tab.HOME ? <HomeTab /> : <CalendarTab />}
@@ -40,6 +46,7 @@ export const Home: React.VFC<Props> = (): JSX.Element => {
           Calendar
         </button>
         <button onClick={handleClickCreateItemButton}>Create Item</button>
+        <button onClick={handleClickSignOutButton}>SignOut</button>
       </div>
     </div>
   );
