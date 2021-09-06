@@ -10,19 +10,22 @@
     "pathpida": "pathpida --output=\"src/libraries\""
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.22.5",
     "destyle.css": "^2.0.2",
-    "next": "11.1.0",
+    "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-query": "^3.21.0"
+    "react-query": "^3.21.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/react": "17.0.19",
+    "@types/react": "17.0.20",
+    "@types/uuid": "^8.3.1",
     "eslint": "7.32.0",
-    "eslint-config-next": "11.1.0",
+    "eslint-config-next": "11.1.2",
     "eslint-config-prettier": "^8.3.0",
     "npm-run-all": "^4.1.5",
-    "pathpida": "^0.16.0",
+    "pathpida": "^0.17.0",
     "prettier": "^2.3.2",
     "typescript": "4.4.2"
   }
