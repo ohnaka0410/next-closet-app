@@ -11,9 +11,11 @@ export type Item = {
   totalUseCount: Readonly<number>;
   imageKey: string;
   createdAt: Readonly<string>;
+  userId: string;
 };
 
 export type ItemSummary = {
   price: Readonly<number>;
   totalUseCount: Readonly<number>;
+  userId: string;
 };

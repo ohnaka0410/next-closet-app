@@ -19,7 +19,11 @@ export const useItemListByGenreKeyQuery = (
   return useQuery<ItemListByGenreKeyQueryResult, Error>(
     [key, { genreKey }],
     async (): Promise<ItemListByGenreKeyQueryResult> => {
-      const { data, error } = await supabase.from<Item>("itemView").select("*").eq("genreKey", genreKey);
+      const { data, error } = await supabase
+        .from<Item>("itemView")
+        .select("*")
+        .eq("genreKey", genreKey)
+        .eq("userId", supabase.auth.user()?.id);
       if (error != null) {
         throw error;
       }
@@ -42,7 +46,11 @@ export const useItemListByCategoryKeyQuery = (
   return useQuery<ItemListByCategoryKeyQueryResult, Error>(
     [key, { categoryKey }],
     async (): Promise<ItemListByCategoryKeyQueryResult> => {
-      const { data, error } = await supabase.from<Item>("itemView").select("*").eq("categoryKey", categoryKey);
+      const { data, error } = await supabase
+        .from<Item>("itemView")
+        .select("*")
+        .eq("categoryKey", categoryKey)
+        .eq("userId", supabase.auth.user()?.id);
       if (error != null) {
         throw error;
       }
@@ -63,6 +71,7 @@ export const useBestUseTotalCountItemListQuery = (
       const { data, error } = await supabase
         .from<Item>("itemView")
         .select("*")
+        .eq("userId", supabase.auth.user()?.id)
         .order("totalUseCount", { ascending: false })
         .limit(6);
       if (error != null) {
@@ -85,6 +94,7 @@ export const useWorstUseTotalCountItemListQuery = (
       const { data, error } = await supabase
         .from<Item>("itemView")
         .select("*")
+        .eq("userId", supabase.auth.user()?.id)
         .order("totalUseCount", { ascending: true })
         .limit(6);
       if (error != null) {
@@ -116,7 +126,11 @@ export const useItemListByDateQuery = (
       if (date == null) {
         return undefined;
       }
-      const { data, error } = await supabase.from<Test>("calendar").select("*,itemView(*)").eq("date", date);
+      const { data, error } = await supabase
+        .from<Test>("calendar")
+        .select("*,itemView(*)")
+        .eq("date", date)
+        .eq("userId", supabase.auth.user()?.id ?? "");
       if (error != null) {
         throw error;
       }
@@ -139,7 +153,11 @@ export const useItemQuery = ({ itemKey }: ItemQueryParams, options?: QueryOption
       if (itemKey == null) {
         return undefined;
       }
-      const { data, error } = await supabase.from<Item>("itemView").select("*").eq("key", itemKey);
+      const { data, error } = await supabase
+        .from<Item>("itemView")
+        .select("*")
+        .eq("key", itemKey)
+        .eq("userId", supabase.auth.user()?.id);
       if (error != null) {
         throw error;
       }
@@ -165,6 +183,7 @@ export const useCreateItemMutation = (
     async ({ imageFile, ...item }: CreateItemMutationParams): Promise<CreateItemMutationResult> => {
       const { data, error } = await supabase.from<Item>("item").insert({
         ...item,
+        userId: supabase.auth.user()?.id,
       });
       if (error != null) {
         throw error;
@@ -196,7 +215,8 @@ export const useUpdateItemMutation = (
         .update({
           ...item,
         })
-        .eq("key", key);
+        .eq("key", key)
+        .eq("userId", supabase.auth.user()?.id);
       if (error != null) {
         throw error;
       }
@@ -221,7 +241,11 @@ export const useDeleteItemMutation = (
 ) => {
   return useMutation<DeleteItemMutationResult, Error, DeleteItemMutationParams>(
     async ({ itemKey }: DeleteItemMutationParams): Promise<DeleteItemMutationResult> => {
-      const { error } = await supabase.from<Item>("item").delete().eq("key", itemKey);
+      const { error } = await supabase
+        .from<Item>("item")
+        .delete()
+        .eq("key", itemKey)
+        .eq("userId", supabase.auth.user()?.id);
       if (error != null) {
         throw error;
       }
@@ -240,6 +264,7 @@ export const useItemSummaryQuery = (options?: QueryOptions<ItemSummaryQueryResul
       return {
         price: 0,
         totalUseCount: 1,
+        userId: "111",
       };
     },
     options

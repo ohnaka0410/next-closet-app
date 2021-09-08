@@ -11,7 +11,10 @@ export const useCalendarListQuery = (options?: QueryOptions<CalendarListQueryRes
   return useQuery<CalendarListQueryResult, Error>(
     [key],
     async (): Promise<CalendarListQueryResult> => {
-      const { data, error } = await supabase.from<Calendar>("genre_view").select("*");
+      const { data, error } = await supabase
+        .from<Calendar>("genre_view")
+        .select("*")
+        .eq("userId", supabase.auth.user()?.id ?? "");
       if (error != null) {
         throw error;
       }
@@ -32,6 +35,7 @@ export const useAddCalendarMutation = (
     async ({ ...calendar }: AddCalendarMutationParams): Promise<AddCalendarMutationResult> => {
       const { data, error } = await supabase.from<Calendar>("calendar").insert({
         ...calendar,
+        userId: supabase.auth.user()?.id,
       });
       if (error != null) {
         throw error;
@@ -55,7 +59,12 @@ export const useDeleteCalendarMutation = (
 ) => {
   return useMutation<DeleteCalendarMutationResult, Error, DeleteCalendarMutationParams>(
     async ({ date, itemKey }: DeleteCalendarMutationParams): Promise<DeleteCalendarMutationResult> => {
-      const { error } = await supabase.from<Calendar>("calendar").delete().eq("date", date).eq("itemKey", itemKey);
+      const { error } = await supabase
+        .from<Calendar>("calendar")
+        .delete()
+        .eq("date", date)
+        .eq("itemKey", itemKey)
+        .eq("userId", supabase.auth.user()?.id ?? "");
       if (error != null) {
         throw error;
       }

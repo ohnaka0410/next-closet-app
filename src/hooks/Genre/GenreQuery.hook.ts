@@ -11,7 +11,10 @@ export const useGenreListQuery = (options?: QueryOptions<GenreListQueryResult, E
   return useQuery<GenreListQueryResult, Error>(
     [key],
     async (): Promise<GenreListQueryResult> => {
-      const { data, error } = await supabase.from<Genre>("genreView").select("*");
+      const { data, error } = await supabase
+        .from<Genre>("genreView")
+        .select("*")
+        .eq("userId", supabase.auth.user()?.id ?? "");
       if (error != null) {
         throw error;
       }
@@ -34,7 +37,11 @@ export const useGenreQuery = ({ genreKey }: GenreQueryParams, options?: QueryOpt
       if (genreKey == null) {
         return undefined;
       }
-      const { data, error } = await supabase.from<Genre>("genreView").select("*").eq("key", genreKey);
+      const { data, error } = await supabase
+        .from<Genre>("genreView")
+        .select("*")
+        .eq("key", genreKey)
+        .eq("userId", supabase.auth.user()?.id ?? "");
       if (error != null) {
         throw error;
       }

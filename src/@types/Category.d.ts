@@ -5,4 +5,5 @@ export type Category = {
   itemCount: Readonly<number>;
   itemTotalUsedCount: Readonly<number>;
   createdAt: Readonly<string>;
+  userId: Readonly<string>;
 };

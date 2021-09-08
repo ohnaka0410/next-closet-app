@@ -4,4 +4,5 @@ export type Genre = {
   itemCount: Readonly<number>;
   itemTotalUsedCount: Readonly<number>;
   createdAt: Readonly<string>;
+  userId: string;
 };

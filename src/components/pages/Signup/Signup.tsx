@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { useCallback, useState } from "react";
-import { useAuthSignInMutation } from "~/hooks/Auth";
+import { useAuthSignUpMutation } from "~/hooks/Auth";
+import Link from "next/link";
 import { pagesPath } from "~/libraries";
 
 type InputValue = {
@@ -10,9 +10,9 @@ type InputValue = {
 
 export type Props = {};
 
-export const Signin: React.VFC<Props> = (): JSX.Element => {
+export const Signup: React.VFC<Props> = (): JSX.Element => {
   const [inputValue, setInputValue] = useState<InputValue>({ email: "", password: "" });
-  const { mutateAsync: signIn } = useAuthSignInMutation();
+  const { mutateAsync: signUp } = useAuthSignUpMutation();
 
   const handleChangeEmail = useCallback(({ target: { value } }: React.ChangeEvent<HTMLInputElement>): void => {
     setInputValue((prev: InputValue): InputValue => {
@@ -32,13 +32,13 @@ export const Signin: React.VFC<Props> = (): JSX.Element => {
     });
   }, []);
 
-  const handleClickSigninButton = useCallback(async (): Promise<void> => {
-    await signIn({ ...inputValue });
-  }, [inputValue, signIn]);
+  const handleClickSignupButton = useCallback(async (): Promise<void> => {
+    await signUp({ ...inputValue });
+  }, [inputValue, signUp]);
 
   return (
     <div>
-      <h1>Sign In</h1>
+      <h1>Sign Up</h1>
       <div>
         <form>
           <div>
@@ -51,13 +51,10 @@ export const Signin: React.VFC<Props> = (): JSX.Element => {
       </div>
       <div>
         <div>
-          <button onClick={handleClickSigninButton}>Sign In</button>
+          <button onClick={handleClickSignupButton}>Sign Up</button>
         </div>
         <div>
-          <Link href={pagesPath.signup.$url()}>to SignUp</Link>
-        </div>
-        <div>
-          <Link href={pagesPath.password_reset.$url()}>to Password Recovery</Link>
+          <Link href={pagesPath.signin.$url()}>to SignIn</Link>
         </div>
       </div>
     </div>

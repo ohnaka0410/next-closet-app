@@ -48,3 +48,42 @@ export const useAuthSignOutMutation = (options?: MutateOptions<AuthSignOutMutati
     }
   }, options);
 };
+
+type AuthPasswordRecoveryMutationParams = {
+  email: string;
+};
+
+type AuthPasswordRecoveryMutationResult = void;
+
+export const useAuthPasswordRecoveryMutation = (
+  options?: MutateOptions<AuthPasswordRecoveryMutationResult, Error, AuthPasswordRecoveryMutationParams>
+) => {
+  return useMutation(
+    async ({ email }: AuthPasswordRecoveryMutationParams): Promise<AuthPasswordRecoveryMutationResult> => {
+      const { error } = await supabase.auth.api.resetPasswordForEmail(email);
+      if (error != null) {
+        throw error;
+      }
+    },
+    options
+  );
+};
+
+type AuthPasswordChangeMutationParams = {
+  password: string;
+};
+
+type AuthPasswordChangeMutationResult = void;
+
+export const useAuthPasswordChangeMutation = (
+  options?: MutateOptions<AuthPasswordChangeMutationResult, Error, AuthPasswordChangeMutationParams>
+) => {
+  return useMutation(async (params: AuthPasswordChangeMutationParams): Promise<AuthPasswordChangeMutationResult> => {
+    const { error } = await supabase.auth.update({
+      ...params,
+    });
+    if (error != null) {
+      throw error;
+    }
+  }, options);
+};
