@@ -24,6 +24,7 @@ export const Category: React.VFC<Props> = ({ genreKey }): JSX.Element => {
 
   return (
     <div>
+      <h1>Category</h1>
       <div>
         <CategoryList genreKey={genreKey} onSelect={handleSelectItem} />
       </div>

@@ -1,8 +1,11 @@
 export type Genre = {
   key: string;
   name: string;
-  itemCount: Readonly<number>;
-  itemTotalUsedCount: Readonly<number>;
   createdAt: Readonly<string>;
-  userId: string;
+};
+
+export type GenreSummary = Genre & {
+  itemTotalUseCount: Readonly<number>;
+  itemCount: Readonly<number>;
+  userId: Readonly<string>;
 };

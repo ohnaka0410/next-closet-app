@@ -266,6 +266,7 @@ export const ItemInput: React.VFC<Props> = ({
     <>
       <ItemInputField label={"genre"} isEdit={isEditValue.genreKey} onChangeToggleIsEdit={handleChangeIsEditGenreKey}>
         <select value={inputValue.genreKey} onChange={handleChangeGenreKey}>
+          <option />
           {genreList != null &&
             genreList.map<JSX.Element>((genre: Genre): JSX.Element => {
               return (
@@ -282,6 +283,7 @@ export const ItemInput: React.VFC<Props> = ({
         onChangeToggleIsEdit={handleChangeIsEditCategoryKey}
       >
         <select value={inputValue.categoryKey} onChange={handleChangeCategoryKey}>
+          <option />
           {categoryist != null &&
             categoryist.map<JSX.Element>((category: Category): JSX.Element => {
               return (

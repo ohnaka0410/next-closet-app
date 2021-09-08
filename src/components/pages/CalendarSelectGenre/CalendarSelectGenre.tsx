@@ -23,6 +23,7 @@ export const CalendarSelectGenre: React.VFC<Props> = ({ date }): JSX.Element => 
   );
   return (
     <div>
+      <h1>Calendar Select Genre</h1>
       <div>
         <GenreList onSelect={handleSelect} />
       </div>

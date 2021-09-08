@@ -12,9 +12,7 @@ export const CategoryListItem: React.VFC<Props> = ({ category, onSelect }): JSX.
 
   return (
     <li>
-      <div>
-        {category.key} - {category.name}
-      </div>
+      <div>{category.name}</div>
       <ItemList itemList={itemList} onSelect={onSelect} />
     </li>
   );

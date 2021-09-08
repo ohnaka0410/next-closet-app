@@ -31,6 +31,10 @@ export const Home: React.VFC<Props> = (): JSX.Element => {
     push(pagesPath.item.create.$url());
   }, [push]);
 
+  const handleClickSummaryButton = useCallback((): void => {
+    push(pagesPath.summary.$url());
+  }, [push]);
+
   const handleClickSignOutButton = useCallback(async (): Promise<void> => {
     await signOut();
   }, [signOut]);
@@ -46,6 +50,7 @@ export const Home: React.VFC<Props> = (): JSX.Element => {
           Calendar
         </button>
         <button onClick={handleClickCreateItemButton}>Create Item</button>
+        <button onClick={handleClickSummaryButton}>Summary</button>
         <button onClick={handleClickSignOutButton}>SignOut</button>
       </div>
     </div>

@@ -28,6 +28,7 @@ export const ItemDetail: React.VFC<Props> = ({ itemKey }): JSX.Element => {
 
   return (
     <div>
+      <h1>Item Detail</h1>
       <div>
         <Detail item={item} />
       </div>

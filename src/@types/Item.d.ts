@@ -15,6 +15,7 @@ export type Item = {
 };
 
 export type ItemSummary = {
+  count: Readonly<number>;
   price: Readonly<number>;
   totalUseCount: Readonly<number>;
   userId: string;

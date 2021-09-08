@@ -28,6 +28,7 @@ export const CalendarSelectItem: React.VFC<Props> = ({ date, genreKey }): JSX.El
 
   return (
     <div>
+      <h1>Calendar Select Item</h1>
       <div>
         <CategoryList genreKey={genreKey} onSelect={handleSelectItem} />
       </div>

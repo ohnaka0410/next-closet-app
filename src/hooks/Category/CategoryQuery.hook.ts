@@ -21,11 +21,7 @@ export const useCategoryListByGenreQuery = (
       if (genreKey == null) {
         return [];
       }
-      const { data, error } = await supabase
-        .from<Category>("categoryView")
-        .select("*")
-        .eq("genreKey", genreKey)
-        .eq("userId", supabase.auth.user()?.id ?? "");
+      const { data, error } = await supabase.from<Category>("category").select("*").eq("genreKey", genreKey);
       if (error != null) {
         throw error;
       }
@@ -51,11 +47,7 @@ export const useCategoryQuery = (
       if (categoryKey == null) {
         return undefined;
       }
-      const { data, error } = await supabase
-        .from<Category>("categoryView")
-        .select("*")
-        .eq("key", categoryKey)
-        .eq("userId", supabase.auth.user()?.id ?? "");
+      const { data, error } = await supabase.from<Category>("category").select("*").eq("key", categoryKey);
       if (error != null) {
         throw error;
       }

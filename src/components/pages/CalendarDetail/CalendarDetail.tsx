@@ -13,7 +13,7 @@ export type Props = {
 export const CalendarDetail: React.VFC<Props> = ({ date }): JSX.Element => {
   const { push, back } = useRouter();
 
-  const { data: itemList } = useItemListByDateQuery({ date });
+  const { data: itemList } = useItemListByDateQuery({ date }, {});
 
   const { mutateAsync: deleteCalendar } = useDeleteCalendarMutation();
 
@@ -34,6 +34,7 @@ export const CalendarDetail: React.VFC<Props> = ({ date }): JSX.Element => {
 
   return (
     <div>
+      <h1>Calendar Detail</h1>
       <div>
         <ItemList itemList={itemList} onSelect={handleSelectItem} />
       </div>

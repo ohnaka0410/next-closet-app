@@ -1,6 +1,6 @@
-import type { QueryOptions, MutateOptions } from "react-query";
-import { useQuery, useMutation } from "react-query";
-import type { Item, ItemSummary, Calendar } from "~/@types";
+import type { MutateOptions, QueryOptions } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import type { Calendar, Item, ItemSummary } from "~/@types";
 import { supabase } from "~/libraries";
 
 const key = "item";
@@ -112,8 +112,8 @@ type ItemListByDateQueryParams = {
 
 type ItemListByDateQueryResult = Item[] | undefined;
 
-type Test = Calendar & {
-  itemView: Item[];
+type CalendarWithItem = Calendar & {
+  itemView: Item;
 };
 
 export const useItemListByDateQuery = (
@@ -127,14 +127,16 @@ export const useItemListByDateQuery = (
         return undefined;
       }
       const { data, error } = await supabase
-        .from<Test>("calendar")
+        .from<CalendarWithItem>("calendar")
         .select("*,itemView(*)")
         .eq("date", date)
         .eq("userId", supabase.auth.user()?.id ?? "");
       if (error != null) {
         throw error;
       }
-      return (data ?? undefined)?.[0]?.itemView;
+      return (data ?? []).map<Item>((calendar: CalendarWithItem): Item => {
+        return calendar.itemView;
+      });
     },
     options
   );
@@ -179,6 +181,7 @@ type CreateItemMutationResult = Item;
 export const useCreateItemMutation = (
   options?: MutateOptions<CreateItemMutationResult, Error, CreateItemMutationParams>
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<CreateItemMutationResult, Error, CreateItemMutationParams>(
     async ({ imageFile, ...item }: CreateItemMutationParams): Promise<CreateItemMutationResult> => {
       const { data, error } = await supabase.from<Item>("item").insert({
@@ -194,7 +197,12 @@ export const useCreateItemMutation = (
       }
       return result;
     },
-    options
+    {
+      ...options,
+      onSuccess: async () => {
+        await queryClient.invalidateQueries([key]);
+      },
+    }
   );
 };
 
@@ -208,12 +216,28 @@ type UpdateItemMutationResult = Item;
 export const useUpdateItemMutation = (
   options?: MutateOptions<UpdateItemMutationResult, Error, UpdateItemMutationParams>
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<UpdateItemMutationResult, Error, UpdateItemMutationParams>(
-    async ({ key, ...item }: UpdateItemMutationParams): Promise<UpdateItemMutationResult> => {
+    async ({
+      key,
+      genreKey,
+      categoryKey,
+      brand,
+      size,
+      price,
+      purchaseDate,
+      initialUseCount,
+    }: UpdateItemMutationParams): Promise<UpdateItemMutationResult> => {
       const { data, error } = await supabase
         .from<Item>("item")
         .update({
-          ...item,
+          genreKey,
+          categoryKey,
+          brand,
+          size,
+          price,
+          purchaseDate,
+          initialUseCount,
         })
         .eq("key", key)
         .eq("userId", supabase.auth.user()?.id);
@@ -226,7 +250,12 @@ export const useUpdateItemMutation = (
       }
       return result;
     },
-    options
+    {
+      ...options,
+      onSuccess: async () => {
+        await queryClient.invalidateQueries([key]);
+      },
+    }
   );
 };
 
@@ -239,6 +268,7 @@ type DeleteItemMutationResult = void;
 export const useDeleteItemMutation = (
   options?: MutateOptions<DeleteItemMutationResult, Error, DeleteItemMutationParams>
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<DeleteItemMutationResult, Error, DeleteItemMutationParams>(
     async ({ itemKey }: DeleteItemMutationParams): Promise<DeleteItemMutationResult> => {
       const { error } = await supabase
@@ -250,7 +280,12 @@ export const useDeleteItemMutation = (
         throw error;
       }
     },
-    options
+    {
+      ...options,
+      onSuccess: async () => {
+        await queryClient.invalidateQueries([key]);
+      },
+    }
   );
 };
 
@@ -260,12 +295,21 @@ export const useItemSummaryQuery = (options?: QueryOptions<ItemSummaryQueryResul
   return useQuery<ItemSummaryQueryResult, Error>(
     [key, "summary"],
     async (): Promise<ItemSummaryQueryResult> => {
-      // TODO
-      return {
-        price: 0,
-        totalUseCount: 1,
-        userId: "111",
-      };
+      const { data, error } = await supabase
+        .from<ItemSummary>("itemSummary")
+        .select("*")
+        .eq("userId", supabase.auth.user()?.id ?? "");
+      if (error != null) {
+        throw error;
+      }
+      return (
+        (data ?? undefined)?.[0] ?? {
+          count: 0,
+          price: 0,
+          totalUseCount: 0,
+          userId: supabase.auth.user()?.id ?? "",
+        }
+      );
     },
     options
   );

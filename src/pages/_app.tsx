@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { QueryClientProvider } from "react-query";
-import { Auth } from "~/components/modules/Auth/Auth";
+import { Auth } from "~/components/modules/Auth";
 import { queryClient } from "~/libraries";
 
 const App: React.VFC<AppProps> = ({ Component, pageProps }) => {

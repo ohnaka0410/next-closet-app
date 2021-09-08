@@ -20,7 +20,7 @@ export const GenreListItem: React.VFC<Props> = ({ genre, onSelect }): JSX.Elemen
   return (
     <li>
       <button onClick={handleClick}>
-        {genre.key} - {genre.name}
+        {genre.name}
         <ul>
           {itemList != null &&
             itemList.map<JSX.Element>((item: Item): JSX.Element => {

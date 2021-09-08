@@ -45,6 +45,7 @@ export const ItemCreate: React.VFC<Props> = (): JSX.Element => {
 
   return (
     <div>
+      <h1>Item Create</h1>
       <div>
         <ItemInput
           inputValue={inputValue}

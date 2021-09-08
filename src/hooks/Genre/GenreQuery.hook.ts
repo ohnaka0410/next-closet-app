@@ -1,6 +1,6 @@
 import type { QueryOptions } from "react-query";
 import { useQuery } from "react-query";
-import type { Genre } from "~/@types";
+import type { Genre, GenreSummary } from "~/@types";
 import { supabase } from "~/libraries";
 
 const key = "genre";
@@ -11,10 +11,7 @@ export const useGenreListQuery = (options?: QueryOptions<GenreListQueryResult, E
   return useQuery<GenreListQueryResult, Error>(
     [key],
     async (): Promise<GenreListQueryResult> => {
-      const { data, error } = await supabase
-        .from<Genre>("genreView")
-        .select("*")
-        .eq("userId", supabase.auth.user()?.id ?? "");
+      const { data, error } = await supabase.from<Genre>("genre").select("*");
       if (error != null) {
         throw error;
       }
@@ -37,15 +34,30 @@ export const useGenreQuery = ({ genreKey }: GenreQueryParams, options?: QueryOpt
       if (genreKey == null) {
         return undefined;
       }
-      const { data, error } = await supabase
-        .from<Genre>("genreView")
-        .select("*")
-        .eq("key", genreKey)
-        .eq("userId", supabase.auth.user()?.id ?? "");
+      const { data, error } = await supabase.from<Genre>("genre").select("*").eq("key", genreKey);
       if (error != null) {
         throw error;
       }
       return (data ?? undefined)?.[0];
+    },
+    options
+  );
+};
+
+type GenreSummaryListQueryResult = GenreSummary[] | undefined;
+
+export const useGenreSummaryListQuery = (options?: QueryOptions<GenreSummaryListQueryResult, Error>) => {
+  return useQuery<GenreSummaryListQueryResult, Error>(
+    [key, "summary"],
+    async (): Promise<GenreSummaryListQueryResult> => {
+      const { data, error } = await supabase
+        .from<GenreSummary>("genreSummary")
+        .select("*")
+        .eq("userId", supabase.auth.user()?.id ?? "");
+      if (error != null) {
+        throw error;
+      }
+      return data ?? undefined;
     },
     options
   );

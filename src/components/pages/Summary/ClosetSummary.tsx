@@ -1,18 +1,22 @@
-import type { Genre } from "~/@types";
-import { useGenreListQuery } from "~/hooks/Genre";
+import type { GenreSummary } from "~/@types";
+import { useGenreSummaryListQuery } from "~/hooks/Genre";
 import { useItemSummaryQuery } from "~/hooks/Item";
 
 export type Props = {};
 
 export const ClosetSummary: React.VFC<Props> = (): JSX.Element => {
   const { data: closetSummary } = useItemSummaryQuery();
-  const { data: genreList } = useGenreListQuery();
+  const { data: genreSummaryList } = useGenreSummaryListQuery();
 
   return (
     <div>
       <div>
         <table>
           <tbody>
+            <tr>
+              <th>count</th>
+              <td>{closetSummary?.count}</td>
+            </tr>
             <tr>
               <th>price</th>
               <td>{closetSummary?.price}</td>
@@ -34,13 +38,13 @@ export const ClosetSummary: React.VFC<Props> = (): JSX.Element => {
             </tr>
           </thead>
           <tbody>
-            {genreList != null &&
-              genreList.map<JSX.Element>((genre: Genre): JSX.Element => {
+            {genreSummaryList != null &&
+              genreSummaryList.map<JSX.Element>((genre: GenreSummary): JSX.Element => {
                 return (
                   <tr key={genre.key}>
                     <th>{genre.name}</th>
                     <th>{genre.itemCount}</th>
-                    <th>{genre.itemTotalUsedCount}</th>
+                    <th>{genre.itemTotalUseCount}</th>
                   </tr>
                 );
               })}

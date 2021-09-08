@@ -7,6 +7,7 @@ type Props = {
 };
 
 export const ItemList: React.VFC<Props> = ({ itemList, onSelect }): JSX.Element => {
+  console.log({ itemList });
   return (
     <ul>
       {itemList != null &&
